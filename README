@@ -1,0 +1,13 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=353
+
+This is just two convenience functions that are useful for retrieval of plugin options that can be set globally as well as having buffer-specific over-rides.
+
+Example:  I have a global variable called "g:sortOrder" which is set to "a".  In the test.java buffer, I create a buffer variable called "b:sortOrder" which is set to "d".  Now, GetVar( "sortOrder" ) will return "d" when I'm in test.java and "a" everywhere else.  My plugin code doesn't need to actually check for buffer or global variables; I can just call GetVar and be done with it.
+
+Why is this useful?  It mimics the behaviour of options.  For example, :set grepprg? will return the value of 'grepprg'; if a local version has been set (:setlocal grepprg=<something>), it will quietly return that.  Otherwise, it will return the global value.  GetVar allows the same behaviour for variables.
+
+GetVar will take an optional second parameter which will be the default value to return if neither a buffer nor a global variable by the specified name is found (the default default :) is -1).
+
+Example:  GetVar( "userID", "NONE" ) will take either a userID or the string "NONE" if there isn't one.  This can be useful where a script should just use an assumed default if the user hasn't specified an override (global or otherwise).
+
+VarExists simply returns true if any of the scopes used by GetVar exist (in the same order of checking as GetVar).
