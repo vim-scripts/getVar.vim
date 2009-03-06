@@ -1,11 +1,16 @@
 " -*- vim -*-
-" FILE: "c:/vim/Vimfiles/plugin/getVar.vim" {{{
+" FILE: "C:/vim/Vimfiles/plugin/GetVar.vim" {{{
 " LAST MODIFICATION: "Fri, 31 Mar 2006 17:25:02 "
 " (C) 2002 by Salman Halim, <salmanhalim@hotmail.com>
 " $Id:$ }}}
 
+" Version 1.3
+"
+" Changed the plugin slightly to allow for a default value to continue working if the regular return value is a list (or dictionary; basically, not a simple
+" scalar value). Then change, while bringing the plugin up to scratch with Vim 7.x, doesn't break Vim 6.x compatibility.
+"
 " Version 1.2
-
+"
 " Tries to return the window-specific value of a variable; if not found, tries
 " to return  the buffer-specific value --  if even that's not  found, tries to
 " return the global value -- if  that's not found either, returns the optional
@@ -16,8 +21,6 @@
 function! GetVar( ... )
   let varName=a:1
 
-  let retVal = exists( "a:2" ) ? a:2 : -1
-
   if ( exists ( "w:" . varName ) )
     let retVal=w:{varName}
   elseif ( exists ( "b:" . varName ) )
@@ -26,7 +29,10 @@ function! GetVar( ... )
     let retVal=t:{varName}
   elseif ( exists ( "g:" . varName ) )
     let retVal=g:{varName}
+  else
+    let retVal = exists( "a:2" ) ? a:2 : -1
   endif
+
   return retVal
 endfunction
 
