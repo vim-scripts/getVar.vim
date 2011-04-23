@@ -1,9 +1,19 @@
-" -*- vim -*-
-" FILE: "C:/vim/Vimfiles/plugin/GetVar.vim" {{{
-" LAST MODIFICATION: "Fri, 31 Mar 2006 17:25:02 "
-" (C) 2002 by Salman Halim, <salmanhalim@hotmail.com>
-" $Id:$ }}}
+" File: GetVar
+" By:   Salman Halim (salmanhalim@gmail.com)
 
+" Version 2.0:
+"
+" Made the whole thing into an autoload script, prefixing the names of all the functions with GetVar (the name of the script); so, the new function names are:
+"
+" GetVar#GetVar
+" GetVar#VarExists
+" GetVar#GetSafe
+" GetVar#Allocate
+"
+" Version 1.5
+"
+" Changed Allocate to return the value of the varible (might be the original value or might be the default value if it didn't previously exist).
+"
 " Version 1.4
 "
 " Added two new functions: GetSafe and Allocate.
@@ -22,7 +32,7 @@
 "
 " Updated on March 31, 2006 (17:24:32) to use Vim 7's t: (tab-specific) variables once buffer-specific variables aren't
 " found.  The new sequence is window -> buffer -> tab -> global.
-function! GetVar( ... )
+function! GetVar#GetVar( ... )
   let varName=a:1
 
   if ( exists ( "w:" . varName ) )
@@ -43,19 +53,21 @@ endfunction
 " just checks to  see if either the  window, buffer or global  version of this
 " variable exists (useful in scripts that only check for existence)
 "
-" this can't use GetVar because the variable might actually BE -1.
-function! VarExists( varName )
+" this can't use GetVar#GetVar because the variable might actually BE -1.
+function! GetVar#VarExists( varName )
   return ( exists( "w:" . a:varName ) || exists( "b:" . a:varName ) || exists( "t:" . a:varName ) || exists ( "g:" . a:varName ) )
 endfunction
 
 " If the specified variable exists (passed in as a string, such as "b:someVar"), its value is passed back; otherwise, the safe value is returned instead.
-function! GetSafe( varName, safeValue )
+function! GetVar#GetSafe( varName, safeValue )
   return exists( a:varName ) ? {a:varName} : a:safeValue
 endfunction
 
 " If the specified variable does NOT exist, it is created and assigned the value specified as the defaultValue; if it does exist, nothing happens.
-function! Allocate( variableName, defaultValue )
+function! GetVar#Allocate( variableName, defaultValue )
   if ( !exists( a:variableName ) )
     let {a:variableName} = a:defaultValue
   endif
+
+  return {a:variableName}
 endfunction
